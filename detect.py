@@ -24,6 +24,7 @@ flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
 flags.DEFINE_list('images', './data/images/kite.jpg', 'path to input image')
+flags.DEFINE_string('image_list', None, 'input file name of image list.txt', short_name='ftxt'))
 flags.DEFINE_string('output', './detections/', 'path to output folder')
 flags.DEFINE_float('iou', 0.45, 'iou threshold')
 flags.DEFINE_float('score', 0.50, 'score threshold')
@@ -47,6 +48,10 @@ def main(_argv):
             interpreter = tf.lite.Interpreter(model_path=FLAGS.weights)
     else:
             saved_model_loaded = tf.saved_model.load(FLAGS.weights, tags=[tag_constants.SERVING])
+            
+    if Flags.image_list:
+        my_file = open(Flags.image_list, "r")
+        images = my_file.readlines()
 
     # loop through images in list and run Yolov4 model on each
     for count, image_path in enumerate(images, 1):
